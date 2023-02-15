@@ -105,6 +105,9 @@ B2_APPLICATION_KEY="<your B2 application key>"
 BUCKET_NAME="<your private B2 bucket, for uploaded videos>"
 ```
 
+When the worker app receives a transcoding request, it downloads the raw video from B2 to a temporary file in the local filesystem. Similarly, `ffmpeg` writes the transcoded video file to a temporary file before the worker app uploads it to B2. By default, the app will delete the temporary files after the upload is complete, but
+you can override this if necessary by editing `config.json` and setting `DELETE_TMP_FILES` to `false`.
+
 ## Run the Worker App
 
 Use `flask run` to run the app in the Flask development server.

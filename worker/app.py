@@ -1,3 +1,4 @@
+import json
 import os
 from subprocess import run
 from tempfile import mkdtemp
@@ -79,6 +80,12 @@ def transcode(inputObject, webhook):
     r = requests.post(webhook, json=response)
     print(f'Status code {r.status_code}')
 
+    if app.config.get('DELETE_TMP_FILES'):
+        print(f'Deleting {input_file}')
+        os.remove(input_file)
+        print(f'Deleting {output_file}')
+        os.remove(output_file)
+
 
 class Videos(Resource):
     def post(self):
@@ -89,6 +96,9 @@ class Videos(Resource):
 
 
 api.add_resource(Videos, '/videos')
+
+app.config['DELETE_TMP_FILES'] = True
+app.config.from_file('config.json', load=json.load, silent=True)
 
 if __name__ == '__main__':
     app.run()
